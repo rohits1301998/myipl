@@ -4,6 +4,7 @@
 	if(empty($_SESSION['login_user'])){
 		header("location: index.php");
 	}
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -28,7 +29,9 @@
 			<div id="predictions">
 				<button id="predictionButton">Predictions</button>
 			</div>
+
 			<div id="givepredictions">
+				<h1 id="loading">Loading.....</h1>
 				<div id="match1" style="display: none">
 					<p><strong><b>match1</b></strong></p>
 				</div>
@@ -52,11 +55,11 @@
 
 <script type="text/javascript">
 	
-	//var userId="<?php echo($_SESSION['login_user']); ?>";
-	var userId="Pru"
+	var userId="<?php echo($_SESSION['user_srno']); ?>";
+	
 	console.log("user is " +userId);
 	var count=0;
-	var selectedTeam1=null,selectedTeam2=null;
+	var selectedTeam1='null',selectedTeam2='null';
 	var predictionInfo={};
 	$(document).ready(function(){
 
@@ -64,6 +67,7 @@
 			type: 'GET',
 			url: 'http://api.timezonedb.com/v2/get-time-zone?key=JEXI0R6B5SQL&format=json&by=zone&zone=Asia/Kolkata',
 			success : function(data){
+				console.log(data);
 				var date=data.formatted.split(" ")[0];
 				var info= data.formatted.split(" ");
 				var time=info[1].split(":");
@@ -83,9 +87,10 @@
 				else if(true) {
 					$.ajax({
 						type: 'GET',
-						url: 'https://myipl-199419.appspot.com/player/scheduler',
+						url: 'https://cors.io/?https://myipl1-202719.appspot.com/player/scheduler',
 						dataType: 'json',
 						success : function(data){
+							$('#loading').remove();
 							var schedule=data.scheduler;
 							for(var i in schedule){
 								var currentDate=schedule[i].date;
@@ -125,7 +130,7 @@
 		var match1=null,match2=null;
 		$.ajax({
 				type:'GET',
-				url:'https://myipl-199419.appspot.com/player/predictions/saurabhsingh',
+				url:'https://cors.io/?https://myipl1-202719.appspot.com/player/predictions/saurabhsingh',
 				dataType:'json',
 				success: function(data){
 					var prediction=data.predictions;
@@ -144,50 +149,44 @@
 				}
 			});
 		$(document).on("click",".teamName1",function(){
-			if(match1==null){
 				selectedTeam1= $(this).attr('data-team');
 				//console.log(selectedTeam1);
-				predictionInfo={"userid":userId,"match1":selectedTeam1,};
+
+				predictionInfo={"userid":userId,"match1":selectedTeam1,"match2":selectedTeam2};
 				//console.log(predictionInfo);
 				$.ajax({
 					type:'POST',
-					data: JSON.stringify(predictionInfo),
-					contentType: "application/json; charset=utf-8",
-					url: 'https://myipl-199419.appspot.com/player/prediction',
+					data: {"predictionInfo":JSON.stringify(predictionInfo)},
+					url: 'processPrediction.php',
 					traditional: true,
-					dataType:'json',
+					dataType:'text',
 					success: function(data){
-						console.log(data);
-						console.log(predictionInfo);
+						alert(data);
+						//console.log(predictionInfo);
 					}
 				});
-			}
-			else{
-				alert("Predictions already submitted");
-			}
 		});
 		$(document).on("click",".teamName2",function(){
-			if(match2==null){
 				selectedTeam2= $(this).attr('data-team');
 				//console.log(selectedTeam1);
-				predictionInfo={"userid":userId,"match2":selectedTeam2};
+				predictionInfo={"userid":userId,"match1":selectedTeam1,"match2":selectedTeam2};
 				//console.log(predictionInfo);
 				$.ajax({
 					type:'POST',
-					data: predictionInfo,
-					url: 'https://myipl-199419.appspot.com/player/prediction',
-					dataType:'json',
+					data: {"predictionInfo":JSON.stringify(predictionInfo)},
+					url: 'processPrediction.php',
+					dataType:'text',
 					success: function(data){
-						console.log(data);
-						console.log(predictionInfo);
+						alert(data);
+						//console.log(predictionInfo);
 					}
 				});
-			}
-			else{
-				alert("Predictions already submitted");
-			}
+			
+			
 		});
 	});
+
+  
 </script>
 <script type="text/javascript">
     document.getElementById("leaderboardButton").onclick = function () {

@@ -11,7 +11,7 @@ else
 $username=$_POST['username'];
 $password=$_POST['password'];
 // Establishing Connection with Server by passing server_name, user_id and password and databasename as a parameter
-$conn = mysqli_connect("localhost", "root", "", "myipl");
+include('conn.php');
 // To protect MySQL injection for Security purpose
 $username = stripslashes($username);
 $password = stripslashes($password);
@@ -27,6 +27,12 @@ $rowsofresult = mysqli_num_rows($result);
 if ($rowsofresult == 1) {
 	echo "In if statement";
 $_SESSION['login_user']=$username; // Initializing Session
+$_SESSION['user_srno']=$rows['sr no'];
+if($_SESSION['login_user']=="saurav"){
+	$_SESSION['admin_user']="saurav";
+	header("location:adminPage.php");
+	exit;	
+}
 header("location: home.php"); // Redirecting To Other Page
 } else {
 $error = "Username or Password is invalid";
