@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 09, 2018 at 10:08 AM
--- Server version: 10.1.29-MariaDB
--- PHP Version: 7.1.12
+-- Generation Time: May 09, 2018 at 08:50 PM
+-- Server version: 10.1.30-MariaDB
+-- PHP Version: 7.2.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -21,6 +21,18 @@ SET time_zone = "+00:00";
 --
 -- Database: `myipl`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `predictions`
+--
+
+CREATE TABLE `predictions` (
+  `user_id` int(11) DEFAULT NULL,
+  `match1` varchar(10) NOT NULL,
+  `match2` varchar(10) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -42,11 +54,18 @@ INSERT INTO `users` (`sr no`, `userID`, `password`) VALUES
 (1, 'Bat', '123456'),
 (2, 'CraigBanks', 'iloveweedand69'),
 (3, 'theshaitaan', 'randaap'),
-(4, 'kshitij', 'kshitij');
+(4, 'kshitij', 'kshitij'),
+(5, 'saurav', 'saurav@123');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `predictions`
+--
+ALTER TABLE `predictions`
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `users`
@@ -63,7 +82,17 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `sr no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `sr no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `predictions`
+--
+ALTER TABLE `predictions`
+  ADD CONSTRAINT `predictions_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`sr no`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
